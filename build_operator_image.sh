@@ -10,6 +10,7 @@ help() {
     echo "-h, --help        show this message"
     echo "-o, --operator    operator name to build, examples: machine-config-operator, cluster-kube-controller-manager-operator"
     echo "-i, --id          id of your pull request to apply on top of the master branch"
+    echo "-r, --repo-url    repository url for clone"
     echo "-u, --username    registered username in quay.io"
     echo "-t, --tag         push to a custom tag in your origin release image repo, default: latest"
     echo "-d, --dockerfile  non-default Dockerfile name, default: Dockerfile"
@@ -47,6 +48,11 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
 
+        -r|--repo-url)
+            CUSTOM_REPO=$2
+            shift 2
+            ;;
+
         -d|--dockerfile)
             DOCKERFILE=$2
             shift 2
@@ -71,13 +77,18 @@ if [ -z "$OPERATOR_NAME" ]; then
 fi
 
 OPERATOR_IMAGE=quay.io/$USERNAME/$OPERATOR_NAME:$TAG
-GITHUB_REPO="https://github.com/openshift/$OPERATOR_NAME"
+
+if [ -n "$CUSTOM_REPO" ]; then
+    GITHUB_REPO="$CUSTOM_REPO"
+else
+    GITHUB_REPO="https://github.com/openshift/$OPERATOR_NAME"
+fi
 
 git ls-remote $GITHUB_REPO 1>/dev/null
 
 echo "Cloning repo $GITHUB_REPO"
 rm -rf $OPERATOR_NAME
-git clone $GITHUB_REPO
+git clone $GITHUB_REPO ./$OPERATOR_NAME
 
 pushd $OPERATOR_NAME
 
