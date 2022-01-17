@@ -4,6 +4,9 @@
 
 It's critical to correctly configure the credentials here or the building process will fail with permission errors.
 
+Also, these sets of scripts rely on `podman` as a container engine.
+For Mac users podman 3.3+ is required, see [podman machine](https://docs.podman.io/en/latest/markdown/podman-machine.1.html?highlight=machine).
+
 ### Accessing registry.ci.openshift.org
 
 For registry.ci.openshift.org, you first need to copy the token from https://oauth-openshift.apps.ci.l2s4.p1.openshiftapps.com/oauth/token/request (top left, "Display Token") and run this command:
@@ -12,11 +15,21 @@ For registry.ci.openshift.org, you first need to copy the token from https://oau
 podman login -u <username> -p <token> https://registry.ci.openshift.org
 ```
 
+### Login into quay.io
+This set of scripts assumes that artifacts will be pushed into your personal quay.io registry,
+for not facing with auth issues need to log in into quay.io first.
+```sh
+podman login quay.io
+```
+
 ### Obtaining OpenShift's quay.io credentials
 
 For OpenShift's quay.io, the credentials need to be taken from https://cloud.redhat.com/openshift/create/local. Click `Download pull secret` and store `pull-secret.txt` in a safe location on your computer.
 
 **NOTE:** These are not your personal credentials, you won't be able to use them to access your personal quay.io account. These credentials are required to obtain the base release image only.
+
+### Limitations
+- podman has an issues with mounting volumes on mac platform, see [this issue](https://github.com/containers/podman/issues/8016) for more details.
 
 ## Build an operator image with your custom changes
 
