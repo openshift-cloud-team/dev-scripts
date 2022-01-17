@@ -127,7 +127,7 @@ echo "Setting operator image to $OPERATOR_IMAGE"
 
 echo "Start building operator image"
 # authfile is podman specific option ¯\_(ツ)_/¯. Consider to drop docker for the great good.
-podman build --no-cache -t $OPERATOR_IMAGE -f $DOCKERFILE . --authfile="$( realpath "${OC_REGISTRY_AUTH_FILE}")"
+podman build --no-cache -t $OPERATOR_IMAGE -f $DOCKERFILE --authfile="$( realpath "${OC_REGISTRY_AUTH_FILE}")" .
 
 echo "Pushing operator image to quay.io"
 podman push $OPERATOR_IMAGE

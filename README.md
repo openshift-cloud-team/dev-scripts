@@ -4,7 +4,7 @@
 
 It's critical to correctly configure the credentials here or the building process will fail with permission errors.
 
-Also, this sets of scripts relying on podman as a container engine.
+Also, these sets of scripts rely on `podman` as a container engine.
 For Mac users podman 3.3+ is required, see [podman machine](https://docs.podman.io/en/latest/markdown/podman-machine.1.html?highlight=machine).
 
 ### Accessing registry.ci.openshift.org
