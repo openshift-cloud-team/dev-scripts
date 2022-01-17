@@ -106,10 +106,10 @@ fi
 git ls-remote $GITHUB_REPO 1>/dev/null
 
 echo "Cloning repo $GITHUB_REPO"
-rm -rf $OPERATOR_NAME
-git clone $GITHUB_REPO
+rm -rf "build/$OPERATOR_NAME"
+git clone $GITHUB_REPO "build/$OPERATOR_NAME"
 
-pushd $OPERATOR_NAME
+pushd "build/$OPERATOR_NAME"
 
 if [ -n "$PRID" ]; then
   echo "Applying your changes"
@@ -137,4 +137,4 @@ popd
 echo "Successfully pushed $OPERATOR_IMAGE"
 
 echo "Cleaning up"
-rm -rf $OPERATOR_NAME
+rm -rf "build/$OPERATOR_NAME"
