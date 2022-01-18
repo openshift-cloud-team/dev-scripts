@@ -10,7 +10,7 @@ help() {
     echo "-h, --help     show this message"
     echo "-u, --username registered username in quay.io"    
     echo "-t, --tag      push to a custom tag in your origin release image repo, default: latest"
-    echo "-r, --release  openshift release version, default: 4.9"
+    echo "-r, --release  openshift release version, default: 4.10"
     echo "-a, --auth     path of registry auth file, default: ./pull-secret.txt"
     echo "-i, --image    image(s) to replace in the release payload in the format '<component_name>=<image_path>'"
 }
