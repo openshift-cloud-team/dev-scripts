@@ -7,13 +7,14 @@ help() {
     echo ""
     echo "Usage: ./build_release_image.sh [options] -u <quay.io username>"
     echo "Options:"
-    echo "-h, --help     show this message"
-    echo "-u, --username registered username in quay.io"    
-    echo "-t, --tag      push to a custom tag in your origin release image repo, default: latest"
-    echo "-r, --release  openshift release version, default: 4.11"
-    echo "-a, --auth     path of registry auth file, default: ./pull-secrets/pull-secret.txt"
-    echo "-i, --image    image(s) to replace in the release payload in the format '<component_name>=<image_path>'"
-    echo "--dry-run      if set, build but do not push the image to image registry, default: false"
+    echo "-h, --help       show this message"
+    echo "-u, --username   registered username in quay.io"
+    echo "-t, --tag        push to a custom tag in your origin release image repo, default: latest"
+    echo "-r, --release    openshift release version, default: 4.11"
+    echo "-a, --auth       path of registry auth file, default: ./pull-secrets/pull-secret.txt"
+    echo "-i, --image      image(s) to replace in the release payload in the format '<component_name>=<image_path>'"
+    echo "--release-image  custom base release image to build from, default: the latest image for the given release version"
+    echo "--dry-run        if set, build but do not push the image to image registry, default: false"
 }
 
 : ${GOPATH:=${HOME}/go}

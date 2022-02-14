@@ -58,13 +58,14 @@ $ ./build_operator_image.sh --username johndow --operator machine-config-operato
 ```txt
 Usage: ./build_release_image.sh [options] -u <quay.io username>
 Options:
--h, --help     show this message
--u, --username registered username in quay.io
--t, --tag      push to a custom tag in your origin release image repo, default: latest
--r, --release  openshift release version, default: 4.11
--a, --auth     path of registry auth file, default: ./pull-secrets/pull-secret.txt
--i, --image    image(s) to replace in the release payload in the format '<component_name>=<image_path>'
---dry-run      if set, build but do not push the image to image registry, default: false
+-h, --help       show this message
+-u, --username   registered username in quay.io
+-t, --tag        push to a custom tag in your origin release image repo, default: latest
+-r, --release    openshift release version, default: 4.11
+-a, --auth       path of registry auth file, default: ./pull-secrets/pull-secret.txt
+-i, --image      image(s) to replace in the release payload in the format '<component_name>=<image_path>'
+--release-image  custom base release image to build from, default: the latest image for the given release version
+--dry-run        if set, build but do not push the image to image registry, default: false
 ```
 
 To build an actual release image with your custom Machine Config Operator image, that was created in the previous step, execute
