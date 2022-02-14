@@ -60,7 +60,7 @@ Options:
 -h, --help     show this message
 -u, --username registered username in quay.io
 -t, --tag      push to a custom tag in your origin release image repo, default: latest
--r, --release  openshift release version, default: 4.10
+-r, --release  openshift release version, default: 4.11
 -a, --auth     path of registry auth file, default: ./pull-secrets/pull-secret.txt
 -i, --image    image(s) to replace in the release payload in the format '<component_name>=<image_path>'
 ```
