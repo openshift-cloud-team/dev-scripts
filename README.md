@@ -42,6 +42,7 @@ Options:
 -u, --username    registered username in quay.io
 -t, --tag         push to a custom tag in your origin release image repo, default: latest
 -d, --dockerfile  non-default Dockerfile name, default: Dockerfile
+--dry-run         if set, build but do not push the image to image registry, default: false
 ```
 
 For instance, if you want to build a Machine Config Operator image with your custom change specified by PR [\#2606](https://github.com/openshift/machine-config-operator/pull/2606) and then push it into your personal quay.io, execute
@@ -63,6 +64,7 @@ Options:
 -r, --release  openshift release version, default: 4.11
 -a, --auth     path of registry auth file, default: ./pull-secrets/pull-secret.txt
 -i, --image    image(s) to replace in the release payload in the format '<component_name>=<image_path>'
+--dry-run      if set, build but do not push the image to image registry, default: false
 ```
 
 To build an actual release image with your custom Machine Config Operator image, that was created in the previous step, execute

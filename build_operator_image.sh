@@ -16,6 +16,7 @@ help() {
     echo "-u, --username    registered username in quay.io"
     echo "-t, --tag         push to a custom tag in your origin release image repo, default: latest"
     echo "-d, --dockerfile  non-default Dockerfile name, default: Dockerfile"
+    echo "--dry-run         if set, build but do not push the image to image registry, default: false"
     echo ""
 }
 
@@ -69,6 +70,11 @@ while [[ $# -gt 0 ]]; do
         -d|--dockerfile)
             DOCKERFILE=$2
             shift 2
+            ;;
+
+        --dry-run)
+            DRY_RUN=true
+            shift
             ;;
 
         *)
@@ -128,12 +134,15 @@ echo "Setting operator image to $OPERATOR_IMAGE"
 echo "Start building operator image"
 podman build --no-cache -t $OPERATOR_IMAGE -f $DOCKERFILE .
 
-echo "Pushing operator image to quay.io"
-podman push $OPERATOR_IMAGE
+if [ -z "$DRY_RUN" ]; then
+  echo "Pushing operator image to quay.io"
+  podman push $OPERATOR_IMAGE
+  echo "Successfully pushed $OPERATOR_IMAGE"
+else
+  echo "Dry run mode is enabled. Do not push $OPERATOR_IMAGE to image registry."
+fi
 
 popd
-
-echo "Successfully pushed $OPERATOR_IMAGE"
 
 echo "Cleaning up"
 rm -rf "build/$OPERATOR_NAME"
