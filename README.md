@@ -61,14 +61,14 @@ Options:
 -u, --username registered username in quay.io
 -t, --tag      push to a custom tag in your origin release image repo, default: latest
 -r, --release  openshift release version, default: 4.10
--a, --auth     path of registry auth file, default: ./pull-secret.txt
+-a, --auth     path of registry auth file, default: ./pull-secrets/pull-secret.txt
 -i, --image    image(s) to replace in the release payload in the format '<component_name>=<image_path>'
 ```
 
 To build an actual release image with your custom Machine Config Operator image, that was created in the previous step, execute
 
 ```sh
-$ ./build_release_image.sh --username johndow --auth ~/pull-secret.txt -i machine-config-operator=quay.io/johndow/machine-config-operator:latest
+$ ./build_release_image.sh --username johndow --auth ~/pull-secrets/pull-secret.txt -i machine-config-operator=quay.io/johndow/machine-config-operator:latest
 ```
 
 To replace other component images add more `-i` options (`-i cluster-kube-controller-manager-operator=quay.io/johndow/cluster-kube-controller-manager-operator:latest` for Kube Controller Manager Operator, `-i aws-cloud-controller-manager=quay.io/johndow/aws-cloud-controller-manager:latest` for AWS Cloud Controller manager, and so on). It is possible to replace several images at once.
