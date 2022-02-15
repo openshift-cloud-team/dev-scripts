@@ -42,6 +42,7 @@ Options:
 -u, --username    registered username in quay.io
 -t, --tag         push to a custom tag in your origin release image repo, default: latest
 -d, --dockerfile  non-default Dockerfile name, default: Dockerfile
+--dry-run         if set, build but do not push the image to image registry, default: false
 ```
 
 For instance, if you want to build a Machine Config Operator image with your custom change specified by PR [\#2606](https://github.com/openshift/machine-config-operator/pull/2606) and then push it into your personal quay.io, execute
@@ -57,18 +58,20 @@ $ ./build_operator_image.sh --username johndow --operator machine-config-operato
 ```txt
 Usage: ./build_release_image.sh [options] -u <quay.io username>
 Options:
--h, --help     show this message
--u, --username registered username in quay.io
--t, --tag      push to a custom tag in your origin release image repo, default: latest
--r, --release  openshift release version, default: 4.10
--a, --auth     path of registry auth file, default: ./pull-secret.txt
--i, --image    image(s) to replace in the release payload in the format '<component_name>=<image_path>'
+-h, --help       show this message
+-u, --username   registered username in quay.io
+-t, --tag        push to a custom tag in your origin release image repo, default: latest
+-r, --release    openshift release version, default: 4.11
+-a, --auth       path of registry auth file, default: ./pull-secrets/pull-secret.txt
+-i, --image      image(s) to replace in the release payload in the format '<component_name>=<image_path>'
+--release-image  custom base release image to build from, default: the latest image for the given release version
+--dry-run        if set, build but do not push the image to image registry, default: false
 ```
 
 To build an actual release image with your custom Machine Config Operator image, that was created in the previous step, execute
 
 ```sh
-$ ./build_release_image.sh --username johndow --auth ~/pull-secret.txt -i machine-config-operator=quay.io/johndow/machine-config-operator:latest
+$ ./build_release_image.sh --username johndow --auth ~/pull-secrets/pull-secret.txt -i machine-config-operator=quay.io/johndow/machine-config-operator:latest
 ```
 
 To replace other component images add more `-i` options (`-i cluster-kube-controller-manager-operator=quay.io/johndow/cluster-kube-controller-manager-operator:latest` for Kube Controller Manager Operator, `-i aws-cloud-controller-manager=quay.io/johndow/aws-cloud-controller-manager:latest` for AWS Cloud Controller manager, and so on). It is possible to replace several images at once.

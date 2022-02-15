@@ -10,13 +10,13 @@ help() {
     echo "-h, --help      show this message"
     echo "-u, --username  registered username in quay.io"
     echo "-t, --tag       push to a custom tag in your origin release image repo, default: latest"
-    echo "-r, --release   openshift release version, default: 4.10"
-    echo "-a, --auth      path of registry auth file, default: ./pull-secret.txt"
+    echo "-r, --release   openshift release version, default: 4.11"
+    echo "-a, --auth      path of registry auth file, default: ./pull-secrets/pull-secret.txt"
 }
 
 : ${TAG:="latest"}
-: ${RELEASE:="4.10"}
-: ${OC_REGISTRY_AUTH_FILE:=$(pwd)"/pull-secrets/pull-secrets.json"}
+: ${RELEASE:="4.11"}
+: ${OC_REGISTRY_AUTH_FILE:=$(pwd)"/pull-secrets/pull-secret.txt"}
 
 while [[ $# -gt 0 ]]; do
     case "$1" in

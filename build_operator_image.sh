@@ -8,7 +8,7 @@ help() {
     echo "Usage: ./build_operator_image.sh [options]"
     echo "Options:"
     echo "-h, --help        show this message"
-    echo "-a, --auth        path of OCP CI registry auth file, default: pull-secrets/pull-secrets.json"
+    echo "-a, --auth        path of OCP CI registry auth file, default: ./pull-secrets/pull-secret.txt"
     echo "-o, --operator    operator name to build, examples: machine-config-operator, cluster-kube-controller-manager-operator"
     echo "-i, --id          id of your pull request to apply on top of the master branch"
     echo "-r, --repo-url    repository url for clone"
@@ -16,12 +16,13 @@ help() {
     echo "-u, --username    registered username in quay.io"
     echo "-t, --tag         push to a custom tag in your origin release image repo, default: latest"
     echo "-d, --dockerfile  non-default Dockerfile name, default: Dockerfile"
+    echo "--dry-run         if set, build but do not push the image to image registry, default: false"
     echo ""
 }
 
 TAG="latest"
 DOCKERFILE="Dockerfile"
-: ${OC_REGISTRY_AUTH_FILE:=$(pwd)"/pull-secrets/pull-secrets.json"}
+: ${OC_REGISTRY_AUTH_FILE:=$(pwd)"/pull-secrets/pull-secret.txt"}
 
 # Parse Options
 while [[ $# -gt 0 ]]; do
@@ -69,6 +70,11 @@ while [[ $# -gt 0 ]]; do
         -d|--dockerfile)
             DOCKERFILE=$2
             shift 2
+            ;;
+
+        --dry-run)
+            DRY_RUN=true
+            shift
             ;;
 
         *)
@@ -126,15 +132,17 @@ fi
 echo "Setting operator image to $OPERATOR_IMAGE"
 
 echo "Start building operator image"
-# authfile is podman specific option ¯\_(ツ)_/¯. Consider to drop docker for the great good.
-podman build --no-cache -t $OPERATOR_IMAGE -f $DOCKERFILE --authfile="$( realpath "${OC_REGISTRY_AUTH_FILE}")" .
+podman build --no-cache -t $OPERATOR_IMAGE -f $DOCKERFILE .
 
-echo "Pushing operator image to quay.io"
-podman push $OPERATOR_IMAGE
+if [ -z "$DRY_RUN" ]; then
+  echo "Pushing operator image to quay.io"
+  podman push $OPERATOR_IMAGE
+  echo "Successfully pushed $OPERATOR_IMAGE"
+else
+  echo "Dry run mode is enabled. Do not push $OPERATOR_IMAGE to image registry."
+fi
 
 popd
-
-echo "Successfully pushed $OPERATOR_IMAGE"
 
 echo "Cleaning up"
 rm -rf "build/$OPERATOR_NAME"
