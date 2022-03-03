@@ -7,22 +7,24 @@ help() {
     echo ""
     echo "Usage: ./build_operator_image.sh [options]"
     echo "Options:"
-    echo "-h, --help        show this message"
-    echo "-a, --auth        path of OCP CI registry auth file, default: ./pull-secrets/pull-secret.txt"
-    echo "-o, --operator    operator name to build, examples: machine-config-operator, cluster-kube-controller-manager-operator"
-    echo "-i, --id          id of your pull request to apply on top of the master branch"
-    echo "-r, --repo-url    repository url for clone"
-    echo "-c, --commit      commit hash for clone, repository-url should be provided"
-    echo "-u, --username    registered username in quay.io"
-    echo "-t, --tag         push to a custom tag in your origin release image repo, default: latest"
-    echo "-d, --dockerfile  non-default Dockerfile name, default: Dockerfile"
-    echo "--dry-run         if set, build but do not push the image to image registry, default: false"
+    echo "-h, --help            show this message"
+    echo "-a, --auth            path of OCP CI registry auth file, default: ./pull-secrets/pull-secret.txt"
+    echo "-o, --operator        operator name to build, examples: machine-config-operator, cluster-kube-controller-manager-operator"
+    echo "-i, --id              id of your pull request to apply on top of the master branch"
+    echo "-r, --repo-url        repository url for clone"
+    echo "-c, --commit          commit hash for clone, repository-url should be provided"
+    echo "-u, --username        registered username in quay.io"
+    echo "-t, --tag             push to a custom tag in your origin release image repo, default: latest"
+    echo "-d, --dockerfile      non-default Dockerfile name, default: Dockerfile"
+    echo "--dry-run             if set, build but do not push the image to image registry, default: false"
+    echo "--master-branch-name  master branch name, default: master"
     echo ""
 }
 
 TAG="latest"
 DOCKERFILE="Dockerfile"
 : ${OC_REGISTRY_AUTH_FILE:=$(pwd)"/pull-secrets/pull-secret.txt"}
+MASTER_BRANCH_NAME="master"
 
 # Parse Options
 while [[ $# -gt 0 ]]; do
@@ -77,6 +79,11 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
 
+        --master-branch-name)
+            MASTER_BRANCH_NAME=$2
+            shift 2
+            ;;
+
         *)
             echo "Invalid option $1"
             help
@@ -113,7 +120,7 @@ git ls-remote $GITHUB_REPO 1>/dev/null
 
 echo "Cloning repo $GITHUB_REPO"
 rm -rf "build/$OPERATOR_NAME"
-git clone $GITHUB_REPO "build/$OPERATOR_NAME"
+git clone --depth 1 $GITHUB_REPO "build/$OPERATOR_NAME"
 
 pushd "build/$OPERATOR_NAME"
 
@@ -121,7 +128,7 @@ if [ -n "$PRID" ]; then
   echo "Applying your changes"
   git fetch origin pull/$PRID/head:$PRID
   git checkout $PRID
-  git rebase master
+  git rebase $MASTER_BRANCH_NAME
 fi
 
 if [ -n "$COMMIT_HASH" ]; then
